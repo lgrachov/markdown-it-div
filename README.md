@@ -1,10 +1,10 @@
 # markdown-it-div
 
-[![Build Status](https://img.shields.io/travis/markdown-it/markdown-it-div/master.svg?style=flat)](https://travis-ci.org/markdown-it/markdown-it-div)
+[![Build Status](https://img.shields.io/travis/kickscondor/markdown-it-div/master.svg?style=flat)](https://travis-ci.org/kickscondor/markdown-it-div)
 [![NPM version](https://img.shields.io/npm/v/markdown-it-div.svg?style=flat)](https://www.npmjs.org/package/markdown-it-div)
-[![Coverage Status](https://img.shields.io/coveralls/markdown-it/markdown-it-div/master.svg?style=flat)](https://coveralls.io/r/markdown-it/markdown-it-div?branch=master)
+[![Coverage Status](https://img.shields.io/coveralls/kickscondor/markdown-it-div/master.svg?style=flat)](https://coveralls.io/r/kickscondor/markdown-it-div?branch=master)
 
-> Plugin for adding block-level divs to [markdown-it](https://github.com/markdown-it/markdown-it) markdown parser.
+> Plugin for adding block-level divs to [markdown-it](https://github.com/kickscondor/markdown-it) markdown parser.
 
 __Requires `markdown-it` v5.+.__
 
@@ -126,4 +126,4 @@ console.log(md.render('::: spoiler click me\n*content*\n:::\n'));
 
 ## License
 
-[MIT](https://github.com/markdown-it/markdown-it-div/blob/master/LICENSE)
+[MIT](https://github.com/kickscondor/markdown-it-div/blob/master/LICENSE)
