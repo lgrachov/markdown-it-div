@@ -3,17 +3,37 @@
 'use strict';
 
 
-module.exports = function container_plugin(md, name, options) {
+module.exports = function container_plugin(md, options) {
 
-  function validateDefault(params) {
-    return params.trim().split(' ', 2)[0] === name;
+  function validateDefault() {
+    return true;
   }
 
   function renderDefault(tokens, idx, _options, env, slf) {
 
     // add a class to the opening tag
     if (tokens[idx].nesting === 1) {
-      tokens[idx].attrJoin('class', name);
+      var params = tokens[idx].info.split(/\s+/);
+      var id = null, classes = [];
+      for (var i = 0; i < params.length; i++) {
+        var className = params[i];
+        if (className.includes('=')) {
+          var set = className.split('=', 2);
+          tokens[idx].attrJoin(set[0], set[1]);
+        } else if (className[0] === '#') {
+          id = className.slice(1);
+        } else if (className[0] === '.') {
+          classes.push(className.slice(1));
+        } else {
+          classes.push(className);
+        }
+      }
+      if (id) {
+        tokens[idx].attrJoin('id', id);
+      }
+      if (classes.length > 0) {
+        tokens[idx].attrJoin('class', classes.join(' '));
+      }
     }
 
     return slf.renderToken(tokens, idx, _options, env, slf);
@@ -53,7 +73,7 @@ module.exports = function container_plugin(md, name, options) {
     pos -= (pos - start) % marker_len;
 
     markup = state.src.slice(start, pos);
-    params = state.src.slice(pos, max);
+    params = state.src.slice(pos, max).trim();
     if (!validate(params)) { return false; }
 
     // Since start is found, we can report success here in validation mode
@@ -116,7 +136,7 @@ module.exports = function container_plugin(md, name, options) {
     // this will prevent lazy continuations from ever going past our end marker
     state.lineMax = nextLine;
 
-    token        = state.push('container_' + name + '_open', 'div', 1);
+    token        = state.push('container', 'div', 1);
     token.markup = markup;
     token.block  = true;
     token.info   = params;
@@ -124,7 +144,7 @@ module.exports = function container_plugin(md, name, options) {
 
     state.md.block.tokenize(state, startLine + 1, nextLine);
 
-    token        = state.push('container_' + name + '_close', 'div', -1);
+    token        = state.push('container', 'div', -1);
     token.markup = state.src.slice(start, pos);
     token.block  = true;
 
@@ -135,9 +155,8 @@ module.exports = function container_plugin(md, name, options) {
     return true;
   }
 
-  md.block.ruler.before('fence', 'container_' + name, container, {
+  md.block.ruler.before('fence', 'container', container, {
     alt: [ 'paragraph', 'reference', 'blockquote', 'list' ]
   });
-  md.renderer.rules['container_' + name + '_open'] = render;
-  md.renderer.rules['container_' + name + '_close'] = render;
+  md.renderer.rules.container = render;
 };

@@ -1,23 +1,43 @@
-/*! markdown-it-container 2.0.0 https://github.com//markdown-it/markdown-it-container @license MIT */(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.markdownitContainer = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/*! markdown-it-div 1.0.0 https://github.com//markdown-it/markdown-it-div @license MIT */(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.markdownitDiv = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 // Process block-level custom containers
 //
 'use strict';
 
 
-module.exports = function container_plugin(md, name, options) {
+module.exports = function container_plugin(md, options) {
 
-  function validateDefault(params) {
-    return params.trim().split(' ', 2)[0] === name;
+  function validateDefault() {
+    return true;
   }
 
-  function renderDefault(tokens, idx, _options, env, self) {
+  function renderDefault(tokens, idx, _options, env, slf) {
 
     // add a class to the opening tag
     if (tokens[idx].nesting === 1) {
-      tokens[idx].attrPush([ 'class', name ]);
+      var params = tokens[idx].info.split(/\s+/);
+      var id = null, classes = [];
+      for (var i = 0; i < params.length; i++) {
+        var className = params[i];
+        if (className.includes('=')) {
+          var set = className.split('=', 2);
+          tokens[idx].attrJoin(set[0], set[1]);
+        } else if (className[0] === '#') {
+          id = className.slice(1);
+        } else if (className[0] === '.') {
+          classes.push(className.slice(1));
+        } else {
+          classes.push(className);
+        }
+      }
+      if (id) {
+        tokens[idx].attrJoin('id', id);
+      }
+      if (classes.length > 0) {
+        tokens[idx].attrJoin('class', classes.join(' '));
+      }
     }
 
-    return self.renderToken(tokens, idx, _options, env, self);
+    return slf.renderToken(tokens, idx, _options, env, slf);
   }
 
   options = options || {};
@@ -54,7 +74,7 @@ module.exports = function container_plugin(md, name, options) {
     pos -= (pos - start) % marker_len;
 
     markup = state.src.slice(start, pos);
-    params = state.src.slice(pos, max);
+    params = state.src.slice(pos, max).trim();
     if (!validate(params)) { return false; }
 
     // Since start is found, we can report success here in validation mode
@@ -117,7 +137,7 @@ module.exports = function container_plugin(md, name, options) {
     // this will prevent lazy continuations from ever going past our end marker
     state.lineMax = nextLine;
 
-    token        = state.push('container_' + name + '_open', 'div', 1);
+    token        = state.push('container', 'div', 1);
     token.markup = markup;
     token.block  = true;
     token.info   = params;
@@ -125,7 +145,7 @@ module.exports = function container_plugin(md, name, options) {
 
     state.md.block.tokenize(state, startLine + 1, nextLine);
 
-    token        = state.push('container_' + name + '_close', 'div', -1);
+    token        = state.push('container', 'div', -1);
     token.markup = state.src.slice(start, pos);
     token.block  = true;
 
@@ -136,11 +156,10 @@ module.exports = function container_plugin(md, name, options) {
     return true;
   }
 
-  md.block.ruler.before('fence', 'container_' + name, container, {
+  md.block.ruler.before('fence', 'container', container, {
     alt: [ 'paragraph', 'reference', 'blockquote', 'list' ]
   });
-  md.renderer.rules['container_' + name + '_open'] = render;
-  md.renderer.rules['container_' + name + '_close'] = render;
+  md.renderer.rules.container = render;
 };
 
 },{}]},{},[1])(1)

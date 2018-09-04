@@ -26,13 +26,13 @@ Could contain block elements too
 .
 
 
-Ending marker could be longer
+Ending marker goes on and on
 .
 ::::: name :::::
   hello world
 ::::::::::::::::
 .
-<div class="name">
+<div class="name :::::">
 <p>hello world</p>
 </div>
 .
@@ -71,7 +71,7 @@ auto-closed block
 <p>auto-closed block</p>
 </div>
 </div>
-<p>::::</p>
+<div class=""></div>
 .
 
 
@@ -148,7 +148,7 @@ It could contain params
 xxx
 :::
 .
-<div class="name">
+<div arg="123" foo="456" class="name">
 <p>xxx</p>
 </div>
 .
@@ -161,21 +161,21 @@ xxx
 ::: arg=123
 .
 <div class="name">
-<p>xxx
-::: arg=123</p>
+<p>xxx</p>
+<div arg="123"></div>
 </div>
 .
 
 
-This however isn't a valid one
+This is valid too
 .
 ::: namename
 xxx
 :::
 .
-<p>::: namename
-xxx
-:::</p>
+<div class="namename">
+<p>xxx</p>
+</div>
 .
 
 
@@ -262,7 +262,7 @@ yyy</p>
 </div>
 </li>
 </ul>
-<p>:::</p>
+<div class="">
 <ul>
 <li>
 <div class="name">
@@ -270,6 +270,6 @@ yyy</p>
 </div>
 </li>
 </ul>
-<p>yyy
-:::</p>
+<p>yyy</p>
+</div>
 .

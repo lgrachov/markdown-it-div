@@ -8,7 +8,7 @@ var assert = require('assert');
 describe('coverage', function () {
   it('marker coverage', function () {
     var tok = require('markdown-it')()
-                .use(require('../'), 'fox', {
+                .use(require('../'), {
                   marker: 'foo',
                   validate: function (p) { assert.equal(p, 'fox'); return 1; }
                 })

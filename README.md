@@ -1,32 +1,50 @@
-# markdown-it-container
+# markdown-it-div
 
-[![Build Status](https://img.shields.io/travis/markdown-it/markdown-it-container/master.svg?style=flat)](https://travis-ci.org/markdown-it/markdown-it-container)
-[![NPM version](https://img.shields.io/npm/v/markdown-it-container.svg?style=flat)](https://www.npmjs.org/package/markdown-it-container)
-[![Coverage Status](https://img.shields.io/coveralls/markdown-it/markdown-it-container/master.svg?style=flat)](https://coveralls.io/r/markdown-it/markdown-it-container?branch=master)
+[![Build Status](https://img.shields.io/travis/markdown-it/markdown-it-div/master.svg?style=flat)](https://travis-ci.org/markdown-it/markdown-it-div)
+[![NPM version](https://img.shields.io/npm/v/markdown-it-div.svg?style=flat)](https://www.npmjs.org/package/markdown-it-div)
+[![Coverage Status](https://img.shields.io/coveralls/markdown-it/markdown-it-div/master.svg?style=flat)](https://coveralls.io/r/markdown-it/markdown-it-div?branch=master)
 
-> Plugin for creating block-level custom containers for [markdown-it](https://github.com/markdown-it/markdown-it) markdown parser.
+> Plugin for adding block-level divs to [markdown-it](https://github.com/markdown-it/markdown-it) markdown parser.
 
-__v2.+ requires `markdown-it` v5.+, see changelog.__
+__Requires `markdown-it` v5.+.__
 
-With this plugin you can create block containers like:
+With this plugin you can create block divs like:
 
 ```
-::: warning
+::: #warning
 *here be dragons*
 :::
 ```
 
-.... and specify how they should be rendered. If no renderer defined, `<div>` with
-container name class will be created:
+This block will be translated to HTML as:
 
 ```html
-<div class="warning">
+<div id="warning">
 <em>here be dragons</em>
 </div>
 ```
 
-Markup is the same as for [fenced code blocks](http://spec.commonmark.org/0.18/#fenced-code-blocks).
-Difference is, that marker use another character and content is rendered as markdown markup.
+So, the triple-colon is used to start the div. This may be followed by an ID,
+any number of class names and any number of other attributes.
+
+The ID is prefixed with an octothorpe:
+
+```
+::: #my-id
+```
+
+Classes need not be prefixed (you can use a dot if like):
+
+```
+::: post .blog-post
+```
+
+Other attributes are of the format `attr=value`. So an ID and class could be
+set with:
+
+```
+::: id=my-id class=blog-post
+```
 
 
 ## Installation
@@ -34,8 +52,8 @@ Difference is, that marker use another character and content is rendered as mark
 node.js, browser:
 
 ```bash
-$ npm install markdown-it-container --save
-$ bower install markdown-it-container --save
+$ npm install markdown-it-div --save
+$ bower install markdown-it-div --save
 ```
 
 
@@ -43,12 +61,11 @@ $ bower install markdown-it-container --save
 
 ```js
 var md = require('markdown-it')()
-            .use(require('markdown-it-container'), name [, options]);
+            .use(require('markdown-it-div')[, options]);
 ```
 
 Params:
 
-- __name__ - container name (mandatory)
 - __options:__
    - __validate__ - optional, function to validate tail after opening marker, should
      return `true` on success.
@@ -58,10 +75,27 @@ Params:
 
 ## Example
 
+Generally, you're just going to use this to add divs around your markdown text.
+
+```markdown
+These are my instructions for hooking the device to the mains.
+
+::: note
+Please do NOT do this if you have never handled the mains before!
+
+These are not instructions: [link](https://example.org).
+:::
+
+Okay, moving along...
+```
+
+The `validate` method allows you to use this class like you would with `markdown-it-container`.
+So, to add a custom `spoiler` tag in your javascript code:
+
 ```js
 var md = require('markdown-it')();
 
-md.use(require('markdown-it-container'), 'spoiler', {
+md.use(require('markdown-it-div'), {
 
   validate: function(params) {
     return params.trim().match(/^spoiler\s+(.*)$/);
@@ -92,4 +126,4 @@ console.log(md.render('::: spoiler click me\n*content*\n:::\n'));
 
 ## License
 
-[MIT](https://github.com/markdown-it/markdown-it-container/blob/master/LICENSE)
+[MIT](https://github.com/markdown-it/markdown-it-div/blob/master/LICENSE)

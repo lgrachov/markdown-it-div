@@ -1,8 +1,8 @@
 {
-  "name": "markdown-it-container",
-  "main": "dist/markdown-it-container.js",
-  "homepage": "https://github.com/markdown-it/markdown-it-container",
-  "description": "Plugin to create block-level custom containers for markdown-it markdown parser",
+  "name": "markdown-it-div",
+  "main": "dist/markdown-it-div.js",
+  "homepage": "https://github.com/kickscondor/markdown-it-div",
+  "description": "Plugin to add block-level <div>s to markdown-it markdown parser",
   "keywords": [
     "markdown-it-plugin",
     "markdown-it",

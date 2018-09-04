@@ -8,7 +8,7 @@ var assert = require('assert');
 describe('api', function () {
   it('renderer', function () {
     var res = require('markdown-it')()
-                .use(require('../'), 'spoiler', {
+                .use(require('../'), {
                   render: function (tokens, idx) {
                     return tokens[idx].nesting === 1
                          ? '<details><summary>click me</summary>\n'
@@ -22,7 +22,7 @@ describe('api', function () {
 
   it('2 char marker', function () {
     var res = require('markdown-it')()
-                .use(require('../'), 'spoiler', {
+                .use(require('../'), {
                   marker: '->'
                 })
                 .render('->->-> spoiler\n*content*\n->->->\n');
@@ -32,8 +32,9 @@ describe('api', function () {
 
   it('marker should not collide with fence', function () {
     var res = require('markdown-it')()
-                .use(require('../'), 'spoiler', {
-                  marker: '`'
+                .use(require('../'), {
+                  marker: '`',
+                  validate: function (params) { return (params === 'spoiler'); }
                 })
                 .render('``` spoiler\n*content*\n```\n');
 
@@ -42,8 +43,9 @@ describe('api', function () {
 
   it('marker should not collide with fence #2', function () {
     var res = require('markdown-it')()
-                .use(require('../'), 'spoiler', {
-                  marker: '`'
+                .use(require('../'), {
+                  marker: '`',
+                  validate: function (params) { return (params === 'spoiler'); }
                 })
                 .render('\n``` not spoiler\n*content*\n```\n');
 
@@ -53,7 +55,7 @@ describe('api', function () {
   describe('validator', function () {
     it('should skip rule if return value is falsy', function () {
       var res = require('markdown-it')()
-                 .use(require('../'), 'name', {
+                 .use(require('../'), {
                    validate: function () { return false; }
                  })
                  .render(':::foo\nbar\n:::\n');
@@ -63,19 +65,19 @@ describe('api', function () {
 
     it('should accept rule if return value is true', function () {
       var res = require('markdown-it')()
-                 .use(require('../'), 'name', {
+                 .use(require('../'), {
                    validate: function () { return true; }
                  })
                  .render(':::foo\nbar\n:::\n');
 
-      assert.equal(res, '<div class="name">\n<p>bar</p>\n</div>\n');
+      assert.equal(res, '<div class="foo">\n<p>bar</p>\n</div>\n');
     });
 
     it('rule should call it', function () {
       var count = 0;
 
       require('markdown-it')()
-        .use(require('../'), 'name', {
+        .use(require('../'), {
           validate: function () { count++; }
         })
        .parse(':\n::\n:::\n::::\n:::::\n', {});
@@ -85,10 +87,10 @@ describe('api', function () {
       assert(count % 3 === 0);
     });
 
-    it('should not trim params', function () {
+    it('should trim params', function () {
       require('markdown-it')()
-        .use(require('../'), 'name', {
-          validate: function (p) { assert.equal(p, ' \tname '); return 1; }
+        .use(require('../'), {
+          validate: function (p) { assert.equal(p, 'name'); return 1; }
         })
        .parse('::: \tname \ncontent\n:::\n', {});
     });
