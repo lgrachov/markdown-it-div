@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-div",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin to add block-level <div>s to markdown-it markdown parser",
   "repository": "kickscondor/markdown-it-div",
   "license": "MIT",
