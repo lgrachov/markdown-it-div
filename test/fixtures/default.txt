@@ -71,7 +71,6 @@ auto-closed block
 <p>auto-closed block</p>
 </div>
 </div>
-<div class=""></div>
 .
 
 
@@ -271,5 +270,73 @@ yyy</p>
 </li>
 </ul>
 <p>yyy</p>
+</div>
+.
+
+Double nesting
+.
+::: top
+::: inner1
+*content1*
+:::
+::: inner2
+*content2*
+:::
+:::
+.
+<div class="top">
+<div class="inner1">
+<p><em>content1</em></p>
+</div>
+<div class="inner2">
+<p><em>content2</em></p>
+</div>
+</div>
+.
+
+Triple nesting
+.
+::: top
+
+:::: med1
+
+::::: inner1
+*content1*
+:::::
+
+::::: inner2
+*content2*
+:::::
+
+::::
+
+:::: med2
+
+::::: inner3
+
+*content3*
+
+:::::
+
+::::: inner4
+*content4*
+.
+<div class="top">
+<div class="med1">
+<div class="inner1">
+<p><em>content1</em></p>
+</div>
+<div class="inner2">
+<p><em>content2</em></p>
+</div>
+</div>
+<div class="med2">
+<div class="inner3">
+<p><em>content3</em></p>
+</div>
+<div class="inner4">
+<p><em>content4</em></p>
+</div>
+</div>
 </div>
 .

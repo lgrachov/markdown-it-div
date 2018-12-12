@@ -46,6 +46,32 @@ set with:
 ::: id=my-id class=blog-post
 ```
 
+You can nest divs within each other as well:
+
+```
+::: #main
+
+::: header
+::: menu
+*menu here*
+:::
+:::
+
+::: body
+::: post
+*POST ONE*
+:::
+::: post
+*POST TWO*
+:::
+:::
+
+::: footer
+Copyright 2018
+:::
+
+:::
+```
 
 ## Installation
 
